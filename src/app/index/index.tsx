@@ -7,6 +7,7 @@ import { styles } from './styles';
 import { MaterialIcons } from '@expo/vector-icons';
 import { colors } from '@/styles/colors';
 import { Categories } from '@/components/categories';
+import { Link } from "@/components/link"
 
 export default function Index() {
   return (
@@ -20,6 +21,11 @@ export default function Index() {
       </View>
       
       <Categories />
+      <Link 
+        name='Portfólio - Lucas Barbosa' 
+        url='https://lucas-barbosa.vercel.app/' 
+        onDetails={() => console.log("Clicou!")}
+      />
     </View>
   )
 }
