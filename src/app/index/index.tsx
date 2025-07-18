@@ -1,4 +1,4 @@
-import { View, Image, TouchableOpacity, FlatList } from 'react-native';
+import { View, Image, TouchableOpacity, FlatList, Modal, Text } from 'react-native';
 import { styles } from './styles';
 import { MaterialIcons } from '@expo/vector-icons';
 import { colors } from '@/styles/colors';
@@ -32,6 +32,30 @@ export default function Index() {
         contentContainerStyle={styles.linksContent}
         showsVerticalScrollIndicator={false}
       />
+
+      <Modal transparent visible>
+        <View style={styles.modal}>
+          <View style={styles.modalContent}>
+            <View style={styles.modalHeader}>
+              <Text style={styles.modalCategory}>
+                Lucas Barbosa
+              </Text>
+              
+              <TouchableOpacity>
+                <MaterialIcons name='close' size={20} color={colors.gray[400]} />
+              </TouchableOpacity>
+            </View>
+
+            <Text style={styles.modalLinkName}>
+              Portfólio
+            </Text>
+
+            <Text style={styles.modalUrl}>
+              https://lucas-barbosa.vercel.app/
+            </Text>
+          </View>
+        </View>
+      </Modal>
     </View>
   )
 }
