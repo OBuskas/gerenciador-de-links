@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { View, Text, TouchableOpacity } from "react-native";
 import { MaterialIcons } from "@expo/vector-icons";
 import { styles } from "./styles"
@@ -8,6 +9,13 @@ import { Input } from "@/components/input";
 import { Button } from "@/components/button";
 
 export default function Add() {
+  const [name, setName] = useState("")
+  const [url, setUrl] = useState("")
+
+  function handleAdd(){
+    console.log({name, url})
+  }
+
   return (
     <View style={styles.container}>
       <View style={styles.header}>
@@ -28,10 +36,18 @@ export default function Add() {
       <View style={styles.form}>
         <Input 
           placeholder="Nome" 
-          onChangeText={(value) => console.log(value)} 
+          autoCorrect={false}
+          onChangeText={setName} 
         />
-        <Input placeholder="Link" />
-        <Button title="Adicionar" />
+        <Input 
+          placeholder="Link"
+          autoCorrect={false}
+          onChangeText={setUrl} 
+        />
+        <Button 
+          title="Adicionar" 
+          onPress={handleAdd}
+        />
       </View>
     </View>
   )
