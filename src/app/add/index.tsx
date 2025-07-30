@@ -3,6 +3,7 @@ import { View, Text, TouchableOpacity, Alert } from "react-native";
 import { MaterialIcons } from "@expo/vector-icons";
 import { styles } from "./styles"
 import { colors } from "@/styles/colors"
+import { linkStorage } from "@/storage/link-storage";
 import { router } from "expo-router"
 import { Categories } from "@/components/categories";
 import { Input } from "@/components/input";
@@ -13,20 +14,33 @@ export default function Add() {
   const [name, setName] = useState("")
   const [url, setUrl] = useState("")
 
-  function handleAdd(){
-    if(!category){
-      return Alert.alert("Categoria", "Selecione a categoria")
-    }
+  async function handleAdd(){
+    try {
+      if(!category){
+        return Alert.alert("Categoria", "Selecione a categoria")
+      }
+      if(!name.trim()){
+        return Alert.alert("Nome", "Informe o nome")
+      }
+      if(!url.trim()){
+        return Alert.alert("Link", "Informe o link")
+      }
 
-    if(!name.trim()){
-      return Alert.alert("Nome", "Informe o nome")
-    }
+      await linkStorage.save({
+        id: new Date().getTime().toString(),
+        name,
+        url,
+        category
+      })
 
-    if(!url.trim()){
-      return Alert.alert("Link", "Informe o link")
-    }
+      // const data = await linkStorage.get()
+      // console.log(data)
+      // console.log({category, name, url})
 
-    console.log({category, name, url})
+    } catch (error) {
+      Alert.alert("Erro", "Não foi possível salvar o link")
+      console.log(error)
+    }
   }
 
   return (
@@ -59,6 +73,7 @@ export default function Add() {
           placeholder="Link"
           autoCorrect={false}
           onChangeText={setUrl} 
+          autoCapitalize="none"
         />
         <Button 
           title="Adicionar" 
