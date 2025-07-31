@@ -9,6 +9,7 @@ import {
   FlatList, 
   Modal, 
   Text, 
+  Linking,
   Alert 
 } from 'react-native';
 import { styles } from './styles';
@@ -58,6 +59,16 @@ export default function Index() {
       { style: "cancel", text: "Não" },
       { text: "Sim", onPress: linkRemove}
     ]) 
+  }
+
+  async function handleOpen() {
+    try {
+      await Linking.openURL(link.url)
+      setShowModal(false)
+    } catch (error) {
+      Alert.alert("Erro", "Não foi possível abrir o link")
+      console.log(error)
+    }
   }
 
   useFocusEffect(useCallback(() => {
@@ -127,7 +138,11 @@ export default function Index() {
                 variant='secondary' 
                 onPress={handleRemove}
               />
-              <Option name="Abrir" icon="language" />
+              <Option 
+                name="Abrir" 
+                icon="language" 
+                onPress={handleOpen}
+              />
             </View>
           </View>
         </View>
