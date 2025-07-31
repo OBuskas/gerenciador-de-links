@@ -1,6 +1,6 @@
 import { 
   useState, 
-  useEffect 
+  useCallback 
 } from "react";
 import { 
   View, 
@@ -19,24 +19,33 @@ import { categories } from "@/utils/categories"
 import { linkStorage, LinkStorage } from "@/storage/link-storage";
 import { Link } from "@/components/link"
 import { Option } from "@/components/option"
-import { router } from "expo-router"
+import { router, useFocusEffect } from "expo-router"
 
 export default function Index() {
+  const [ showModal, setShowModal ] = useState(false)
+  const [ link, setLink ] = useState<LinkStorage>({} as LinkStorage)
   const [links, setLinks] = useState<LinkStorage[]>([])
   const [category, setCategory] = useState(categories[0].name)
 
   async function getLinks() {
     try {
       const response = await linkStorage.get()
-      setLinks(response)
+      const filtered = response.filter((link) => link.category === category)
+      setLinks(filtered)
     } catch (error) {
       Alert.alert("Erro", "Não foi possível listar os links")
     }
   }
 
-  useEffect(() => {
+  function handleDetails(selected: LinkStorage){
+    setShowModal(true)
+    setLink(selected)
+  }
+
+  useFocusEffect(useCallback(() => {
     getLinks()
   }, [category])
+)
   
   return (
     <View style={styles.container}>
@@ -60,7 +69,7 @@ export default function Index() {
           <Link
             name={item.name}
             url={item.url}
-            onDetails={() => console.log("Clicou!")}
+            onDetails={() => handleDetails(item)}
           />
         )}
         style={styles.links}
@@ -68,25 +77,29 @@ export default function Index() {
         showsVerticalScrollIndicator={false}
       />
 
-      <Modal transparent visible={false}>
+      <Modal transparent visible={showModal} animationType="slide">
         <View style={styles.modal}>
           <View style={styles.modalContent}>
             <View style={styles.modalHeader}>
               <Text style={styles.modalCategory}>
-                Lucas Barbosa
+                {link.category}
               </Text>
               
-              <TouchableOpacity>
-                <MaterialIcons name='close' size={20} color={colors.gray[400]} />
+              <TouchableOpacity onPress={() => setShowModal(false)}>
+                <MaterialIcons 
+                  name='close' 
+                  size={20} 
+                  color={colors.gray[400]} 
+                />
               </TouchableOpacity>
             </View>
 
             <Text style={styles.modalLinkName}>
-              Portfólio
+              {link.name}
             </Text>
 
             <Text style={styles.modalUrl}>
-              https://lucas-barbosa.vercel.app/
+              {link.url}
             </Text>
 
             <View style={styles.modalFooter}>
